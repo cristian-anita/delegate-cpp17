@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21) # for Visual Studio 17 2022
 
 project(Delegate
 	DESCRIPTION "A non-owning, const-noexcept-correct and equality comparable callable wrapper."
-	HOMEPAGE_URL "https://github.com/cristian-anita/delegate-c++17"
+	HOMEPAGE_URL "https://github.com/cristian-anita/delegate-cpp17"
 	LANGUAGES CXX
 )
 
