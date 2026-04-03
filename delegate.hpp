@@ -67,7 +67,7 @@ namespace bricxx {
 /// - is copyable, small (two pointers) and fast (no dynamic memory allocation, no virtual functions,
 /// all functions are inline (except stubs because their address is needed),
 /// delegate call involves only two extra calls (operator()() and stub function)).
-/// - supports (non-member) functions, methods (member functions) and functors/lambda.
+/// - supports functions, member functions and functors/lambda.
 /// - supports compatible signatures.
 /// - is a single header library so it is easy to integrate in any project.
 ///
@@ -96,7 +96,7 @@ namespace bricxx {
 ///
 /// <b>Minimal introduction/examples</b> (please see tests for more details):
 /// \code
-/// // (non-member) function
+/// // (static member) function
 /// Delegate<int (int)> functionDelegate;
 /// functionDelegate.Bind<&::islower>();
 /// if (!functionDelegate.IsBindedTo<&::islower>()) throw runtime_error("function test failed");
@@ -114,7 +114,7 @@ namespace bricxx {
 /// if (!lambdaDelegate(2, 1)) throw runtime_error("lambda test failed");
 /// if (numCalls != 1U) throw runtime_error("lambda test failed");
 /// 
-/// // method (member function)
+/// // non-static member function
 /// string hello = "Hello, World!";
 /// Delegate<void ()> methodDelegate;
 /// methodDelegate.Bind<&string::clear>(hello);
@@ -253,7 +253,7 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
-	/// Binds the delegate to a (non-member) function.
+	/// Binds the delegate to a (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -271,7 +271,7 @@ public:
 	>
 	constexpr void Bind(TFunctor& functor) noexcept;
 	
-	/// Binds the delegate to an \p object + method (member function).
+	/// Binds the delegate to an \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -287,7 +287,7 @@ public:
 	/// Test if the delegate is binded to the given target.
 	/// @{
 	
-	/// Test if the delegate is binded to the given (non-member) function.
+	/// Test if the delegate is binded to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -305,7 +305,7 @@ public:
 	>
 	[[nodiscard]] constexpr bool IsBindedTo(TFunctor& functor) const noexcept;
 	
-	/// Test if the delegate is binded to the given \p object + method (member function).
+	/// Test if the delegate is binded to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -333,7 +333,7 @@ public:
 	/// Creates a delegate and binds it to the given target.
 	/// @{
 	
-	/// Creates a delegate and binds it to the given (non-member) function.
+	/// Creates a delegate and binds it to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -351,7 +351,7 @@ public:
 	>
 	[[nodiscard]] static constexpr Delegate CreateAndBind(TFunctor& functor) noexcept;
 	
-	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// Creates a delegate and binds it to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -403,7 +403,7 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
-	/// Binds the delegate to a (non-member) function.
+	/// Binds the delegate to a (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -421,7 +421,7 @@ public:
 	>
 	constexpr void Bind(const TFunctor& functor) noexcept;
 	
-	/// Binds the delegate to an \p object + method (member function).
+	/// Binds the delegate to an \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -437,7 +437,7 @@ public:
 	/// Test if the delegate is binded to the given target.
 	/// @{
 	
-	/// Test if the delegate is binded to the given (non-member) function.
+	/// Test if the delegate is binded to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -455,7 +455,7 @@ public:
 	>
 	[[nodiscard]] constexpr bool IsBindedTo(const TFunctor& functor) const noexcept;
 	
-	/// Test if the delegate is binded to the given \p object + method (member function).
+	/// Test if the delegate is binded to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -483,7 +483,7 @@ public:
 	/// Creates a delegate and binds it to the given target.
 	/// @{
 	
-	/// Creates a delegate and binds it to the given (non-member) function.
+	/// Creates a delegate and binds it to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -501,7 +501,7 @@ public:
 	>
 	[[nodiscard]] static constexpr Delegate CreateAndBind(const TFunctor& functor) noexcept;
 	
-	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// Creates a delegate and binds it to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -553,7 +553,7 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
-	/// Binds the delegate to a (non-member) function.
+	/// Binds the delegate to a (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -571,7 +571,7 @@ public:
 	>
 	constexpr void Bind(TFunctor& functor) noexcept;
 	
-	/// Binds the delegate to an \p object + method (member function).
+	/// Binds the delegate to an \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -587,7 +587,7 @@ public:
 	/// Test if the delegate is binded to the given target.
 	/// @{
 	
-	/// Test if the delegate is binded to the given (non-member) function.
+	/// Test if the delegate is binded to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -605,7 +605,7 @@ public:
 	>
 	[[nodiscard]] constexpr bool IsBindedTo(TFunctor& functor) const noexcept;
 	
-	/// Test if the delegate is binded to the given \p object + method (member function).
+	/// Test if the delegate is binded to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -633,7 +633,7 @@ public:
 	/// Creates a delegate and binds it to the given target.
 	/// @{
 	
-	/// Creates a delegate and binds it to the given (non-member) function.
+	/// Creates a delegate and binds it to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -651,7 +651,7 @@ public:
 	>
 	[[nodiscard]] static constexpr Delegate CreateAndBind(TFunctor& functor) noexcept;
 	
-	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// Creates a delegate and binds it to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -703,7 +703,7 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
-	/// Binds the delegate to a (non-member) function.
+	/// Binds the delegate to a (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -721,7 +721,7 @@ public:
 	>
 	constexpr void Bind(const TFunctor& functor) noexcept;
 	
-	/// Binds the delegate to an \p object + method (member function).
+	/// Binds the delegate to an \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -737,7 +737,7 @@ public:
 	/// Test if the delegate is binded to the given target.
 	/// @{
 	
-	/// Test if the delegate is binded to the given (non-member) function.
+	/// Test if the delegate is binded to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -755,7 +755,7 @@ public:
 	>
 	[[nodiscard]] constexpr bool IsBindedTo(const TFunctor& functor) const noexcept;
 	
-	/// Test if the delegate is binded to the given \p object + method (member function).
+	/// Test if the delegate is binded to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<
@@ -783,7 +783,7 @@ public:
 	/// Creates a delegate and binds it to the given target.
 	/// @{
 	
-	/// Creates a delegate and binds it to the given (non-member) function.
+	/// Creates a delegate and binds it to the given (static member) function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
 	template <auto TFunction,
 		typename = ::std::enable_if_t<
@@ -801,7 +801,7 @@ public:
 	>
 	[[nodiscard]] static constexpr Delegate CreateAndBind(const TFunctor& functor) noexcept;
 	
-	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// Creates a delegate and binds it to the given \p object + non-static member function.
 	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
 	template <auto TMethod, class TClass,
 		typename = ::std::enable_if_t<

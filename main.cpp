@@ -178,7 +178,7 @@ public:
 
 
 void TestHeaderDoc() {
-	// (non-member) function
+	// (static member) function
 	Delegate<int (int)> functionDelegate;
 	functionDelegate.Bind<&::islower>();
 	if (!functionDelegate.IsBindedTo<&::islower>()) throw runtime_error("function test failed");
@@ -196,7 +196,7 @@ void TestHeaderDoc() {
 	if (!lambdaDelegate(2, 1)) throw runtime_error("lambda test failed");
 	if (numCalls != 1U) throw runtime_error("lambda test failed");
 	
-	// method (member function)
+	// non-static member function
 	string hello = "Hello, World!";
 	Delegate<void ()> methodDelegate;
 	methodDelegate.Bind<&string::clear>(hello);
@@ -261,7 +261,7 @@ void TestDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 function
+	// 2.1 (static member) function
 	{
 		Delegate<int (int, int)> delegate;
 		delegate.Bind<&FunctionAddInt>();
@@ -321,7 +321,7 @@ void TestDelegate() {
 		BRICXX_CHECK(numCalls == 2U);
 	}
 	
-	// 2.4 member
+	// 2.4 non-static member function
 	{
 		ClassAddInt classAddInt;
 		
@@ -347,7 +347,7 @@ void TestDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 function
+	// 3.1 (static member) function
 	{
 		Delegate<int (int, int)> delegate;
 		delegate.Bind<&FunctionAddInt>();
@@ -422,7 +422,7 @@ void TestDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.4 member
+	// 3.4 non-static member function
 	{
 		ClassAddInt classAddInt;
 		
@@ -453,7 +453,7 @@ void TestDelegate() {
 	//************************************************************
 	// 4 compatible signatures
 	
-	// 4.1 function
+	// 4.1 (static member) function
 	{
 		Delegate<int (int, int)> delegate;
 		delegate.Bind<&FunctionAddLong>();
@@ -490,7 +490,7 @@ void TestDelegate() {
 		BRICXX_CHECK(numCalls == 1U);
 	}
 	
-	// 4.4 member
+	// 4.4 non-static member function
 	{
 		ClassAddLong classAddLong;
 		
@@ -524,7 +524,7 @@ void TestConstDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 function
+	// 2.1 (static member) function
 	{
 		Delegate<int (int, int) const> delegate;
 		delegate.Bind<&FunctionAddInt>();
@@ -578,7 +578,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate1(1, 2) == 3);
 	}
 	
-	// 2.4 member
+	// 2.4 non-static member function
 	{
 		ConstClassAddInt constClassAddInt;
 		
@@ -602,7 +602,7 @@ void TestConstDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 function
+	// 3.1 (static member) function
 	{
 		Delegate<int (int, int) const> delegate;
 		delegate.Bind<&FunctionAddInt>();
@@ -671,7 +671,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.4 member
+	// 3.4 non-static member function
 	{
 		ConstClassAddInt constClassAddInt;
 		
@@ -724,7 +724,7 @@ void TestConstDelegate() {
 		(void)delegate;
 	}
 	
-	// 4.3 member
+	// 4.3 non-static member function
 	{
 		ClassAddInt classAddInt;
 		
@@ -738,7 +738,7 @@ void TestConstDelegate() {
 	//************************************************************
 	// 5 compatible signatures
 	
-	// 5.1 function
+	// 5.1 (static member) function
 	{
 		Delegate<int (int, int) const> delegate;
 		delegate.Bind<&FunctionAddLong>();
@@ -771,7 +771,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.4 member
+	// 5.4 non-static member function
 	{
 		ConstClassAddLong constClassAddLong;
 		
@@ -796,7 +796,7 @@ void TestNoexceptDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 function
+	// 2.1 (static member) function
 	{
 		Delegate<int (int, int) noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddInt>();
@@ -856,7 +856,7 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(numCalls == 2U);
 	}
 	
-	// 2.4 member
+	// 2.4 non-static member function
 	{
 		NoexceptClassAddInt noexceptClassAddInt;
 		
@@ -883,7 +883,7 @@ void TestNoexceptDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 function
+	// 3.1 (static member) function
 	{
 		Delegate<int (int, int) noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddInt>();
@@ -958,7 +958,7 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.4 member
+	// 3.4 non-static member function
 	{
 		NoexceptClassAddInt noexceptClassAddInt;
 		
@@ -989,7 +989,7 @@ void TestNoexceptDelegate() {
 	//************************************************************
 	// 4 noexcept-correctness
 	
-	// 4.1 function
+	// 4.1 (static member) function
 	{
 		Delegate<int (int, int) noexcept> delegate;
 		//delegate.Bind<&FunctionAddInt>();	// OK, does not compile
@@ -1020,7 +1020,7 @@ void TestNoexceptDelegate() {
 		(void)delegate;
 	}
 	
-	// 4.4 member
+	// 4.4 non-static member function
 	{
 		ClassAddInt classAddInt;
 		
@@ -1034,7 +1034,7 @@ void TestNoexceptDelegate() {
 	//************************************************************
 	// 5 compatible signatures
 	
-	// 5.1 function
+	// 5.1 (static member) function
 	{
 		Delegate<int (int, int) noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddLong>();
@@ -1071,7 +1071,7 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(numCalls == 1U);
 	}
 	
-	// 5.4 member
+	// 5.4 non-static member function
 	{
 		NoexceptClassAddLong noexceptClassAddLong;
 		
@@ -1097,7 +1097,7 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 function
+	// 2.1 (static member) function
 	{
 		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddInt>();
@@ -1151,7 +1151,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate1(1, 2) == 3);
 	}
 	
-	// 2.4 member
+	// 2.4 non-static member function
 	{
 		ConstNoexceptClassAddInt constNoexceptClassAddInt;
 		
@@ -1178,7 +1178,7 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 function
+	// 3.1 (static member) function
 	{
 		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddInt>();
@@ -1247,7 +1247,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.4 member
+	// 3.4 non-static member function
 	{
 		ConstNoexceptClassAddInt constNoexceptClassAddInt;
 		
@@ -1278,7 +1278,7 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 4 const-noexcept-correctness
 	
-	// 4.1 function
+	// 4.1 (static member) function
 	{
 		Delegate<int (int, int) const noexcept> delegate;
 		//delegate.Bind<&FunctionAddInt>();	// OK, does not compile
@@ -1332,7 +1332,7 @@ void TestConstNoexceptDelegate() {
 		(void)delegate;
 	}
 	
-	// 4.4 member
+	// 4.4 non-static member function
 	{
 		Delegate<int (int, int) const noexcept> delegate;
 		
@@ -1355,7 +1355,7 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 5 compatible signatures
 	
-	// 5.1 function
+	// 5.1 (static member) function
 	{
 		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind<&NoexceptFunctionAddLong>();
@@ -1388,7 +1388,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.4 member
+	// 5.4 non-static member function
 	{
 		ConstNoexceptClassAddLong constNoexceptClassAddLong;
 		
