@@ -371,6 +371,15 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
+	/// Binds the delegate to a (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	constexpr void Bind() noexcept;
+	
 	/// Binds the delegate to a \p functor / lambda (\c TFunctor is auto-deduced).
 	template <class TFunctor,
 		typename = ::std::enable_if_t<
@@ -395,6 +404,15 @@ public:
 	/// \name Binder target testers (convenience methods).
 	/// Test if the delegate is binded to the given target.
 	/// @{
+	
+	/// Test if the delegate is binded to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] constexpr bool IsBindedTo() const noexcept;
 	
 	/// Test if the delegate is binded to the given \p functor / lambda (\c TFunctor is auto-deduced).
 	template <class TFunctor,
@@ -585,6 +603,15 @@ public:
 	/// Binds the delegate to a target.
 	/// @{
 	
+	/// Binds the delegate to a (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	constexpr void Bind() noexcept;
+	
 	/// Binds the delegate to a \p functor / lambda (\c TFunctor is auto-deduced).
 	template <class TFunctor,
 		typename = ::std::enable_if_t<
@@ -609,6 +636,15 @@ public:
 	/// \name Binder target testers (convenience methods).
 	/// Test if the delegate is binded to the given target.
 	/// @{
+	
+	/// Test if the delegate is binded to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] constexpr bool IsBindedTo() const noexcept;
 	
 	/// Test if the delegate is binded to the given \p functor / lambda (\c TFunctor is auto-deduced).
 	template <class TFunctor,
@@ -849,6 +885,18 @@ inline constexpr bool Delegate<TRetVal (TParams...) const>::operator!=(const Del
 
 
 template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr void Delegate<TRetVal (TParams...) const>::Bind() noexcept {
+	this->pStub_ = static_cast<StubFnPtr>(
+		// FunctionStub()
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+			return (*TFunction)(::std::forward<TParams>(params)...);
+		}
+	);
+	this->pTypeErasedObject_ = nullptr;
+}
+
+template <typename TRetVal, typename... TParams>
 template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const>::Bind(const TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
@@ -880,6 +928,14 @@ inline constexpr void Delegate<TRetVal (TParams...) const>::Bind(const TClass& o
 	this->pTypeErasedObject_ = const_cast<ErasedObjectType*>(static_cast<const ErasedObjectType*>(::std::addressof(object)));
 }
 
+
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr bool Delegate<TRetVal (TParams...) const>::IsBindedTo() const noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return *this == delegate;
+}
 
 template <typename TRetVal, typename... TParams>
 template <class TFunctor, typename>
@@ -1035,6 +1091,18 @@ inline constexpr bool Delegate<TRetVal (TParams...) const noexcept>::operator!=(
 
 
 template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind() noexcept {
+	this->pStub_ = static_cast<StubFnPtr>(
+		// FunctionStub()
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+			return (*TFunction)(::std::forward<TParams>(params)...);
+		}
+	);
+	this->pTypeErasedObject_ = nullptr;
+}
+
+template <typename TRetVal, typename... TParams>
 template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind(const TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
@@ -1066,6 +1134,14 @@ inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind(const 
 	this->pTypeErasedObject_ = const_cast<ErasedObjectType*>(static_cast<const ErasedObjectType*>(::std::addressof(object)));
 }
 
+
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr bool Delegate<TRetVal (TParams...) const noexcept>::IsBindedTo() const noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return *this == delegate;
+}
 
 template <typename TRetVal, typename... TParams>
 template <class TFunctor, typename>

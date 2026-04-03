@@ -502,7 +502,18 @@ void TestConstDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 functor
+	// 2.1 function
+	{
+		Delegate<long (long, long) const> delegate;
+		delegate.Bind<&FunctionAddLong>();
+		BRICXX_CHECK(delegate.IsBinded());
+		BRICXX_CHECK(delegate.IsBindedTo<&FunctionAddLong>());
+		BRICXX_CHECK(delegate(1L, 2L) == 3L);
+		delegate.Unbind();
+		BRICXX_CHECK(!delegate.IsBinded());
+	}
+	
+	// 2.2 functor
 	{
 		ConstFunctorAddLong constFunctorAddLong;
 		
@@ -515,7 +526,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(!delegate.IsBinded());
 	}
 	
-	// 2.2 lambda
+	// 2.3 lambda
 	{
 		auto constLambdaAddLong = [](long x, long y) -> long {
 			return x + y;
@@ -530,7 +541,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(!delegate.IsBinded());
 	}
 	
-	// 2.3 member
+	// 2.4 member
 	{
 		ConstClassAddLong constClassAddLong;
 		
@@ -548,7 +559,28 @@ void TestConstDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 functor
+	// 3.1 function
+	{
+		Delegate<long (long, long) const> delegate;
+		delegate.Bind<&FunctionAddLong>();
+		
+		Delegate<long (long, long) const> delegate2 = delegate;
+		BRICXX_CHECK(delegate2.IsBinded());
+		BRICXX_CHECK(delegate2.IsBindedTo<&FunctionAddLong>());
+		BRICXX_CHECK(delegate2(1L, 2L) == 3L);
+		
+		Delegate<long (long, long) const> delegate3;
+		delegate3 = delegate;
+		BRICXX_CHECK(delegate3.IsBinded());
+		BRICXX_CHECK(delegate3.IsBindedTo<&FunctionAddLong>());
+		BRICXX_CHECK(delegate3(2L, 3L) == 5L);
+		
+		BRICXX_CHECK(delegate2 == delegate3);
+		delegate3.Unbind();
+		BRICXX_CHECK(delegate2 != delegate3);
+	}
+	
+	// 3.2 functor
 	{
 		ConstFunctorAddLong constFunctorAddLong;
 		
@@ -571,7 +603,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.2 lambda
+	// 3.3 lambda
 	{
 		auto constLambdaAddLong = [](long x, long y) -> long {
 			return x + y;
@@ -596,7 +628,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.3 member
+	// 3.4 member
 	{
 		ConstClassAddLong constClassAddLong;
 		
@@ -663,7 +695,16 @@ void TestConstDelegate() {
 	//************************************************************
 	// 5 compatible signatures
 	
-	// 5.1 functor
+	// 5.1 function
+	{
+		Delegate<long (long, long) const> delegate;
+		delegate.Bind<&FunctionAddInt>();
+		BRICXX_CHECK(delegate.IsBinded());
+		BRICXX_CHECK(delegate.IsBindedTo<&FunctionAddInt>());
+		BRICXX_CHECK(delegate(1, 2) == 3);
+	}
+	
+	// 5.2 functor
 	{
 		ConstFunctorAddInt constFunctorAddInt;
 		
@@ -674,7 +715,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.2 lambda
+	// 5.3 lambda
 	{
 		auto constLambdaAddInt = [](int x, int y) -> int {
 			return x + y;
@@ -687,7 +728,7 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.3 member
+	// 5.4 member
 	{
 		ConstClassAddInt constClassAddInt;
 		
@@ -988,7 +1029,18 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 2 bind/unbind
 	
-	// 2.1 functor
+	// 2.1 function
+	{
+		Delegate<long (long, long) const noexcept> delegate;
+		delegate.Bind<&NoexceptFunctionAddLong>();
+		BRICXX_CHECK(delegate.IsBinded());
+		BRICXX_CHECK(delegate.IsBindedTo<&NoexceptFunctionAddLong>());
+		BRICXX_CHECK(delegate(1L, 2L) == 3L);
+		delegate.Unbind();
+		BRICXX_CHECK(!delegate.IsBinded());
+	}
+	
+	// 2.2 functor
 	{
 		ConstNoexceptFunctorAddLong constNoexceptFunctorAddLong;
 		
@@ -1001,7 +1053,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(!delegate.IsBinded());
 	}
 	
-	// 2.2 lambda
+	// 2.3 lambda
 	{
 		auto constNoexceptLambdaAddLong = [](long x, long y) noexcept -> long {
 			return x + y;
@@ -1016,7 +1068,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(!delegate.IsBinded());
 	}
 	
-	// 2.3 member
+	// 2.4 member
 	{
 		ConstNoexceptClassAddLong constNoexceptClassAddLong;
 		
@@ -1034,7 +1086,28 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 3 copy constructor/assignment, equality
 	
-	// 3.1 functor
+	// 3.1 function
+	{
+		Delegate<long (long, long) const noexcept> delegate;
+		delegate.Bind<&NoexceptFunctionAddLong>();
+		
+		Delegate<long (long, long) const noexcept> delegate2 = delegate;
+		BRICXX_CHECK(delegate2.IsBinded());
+		BRICXX_CHECK(delegate2.IsBindedTo<&NoexceptFunctionAddLong>());
+		BRICXX_CHECK(delegate2(1L, 2L) == 3L);
+		
+		Delegate<long (long, long) const noexcept> delegate3;
+		delegate3 = delegate;
+		BRICXX_CHECK(delegate3.IsBinded());
+		BRICXX_CHECK(delegate3.IsBindedTo<&NoexceptFunctionAddLong>());
+		BRICXX_CHECK(delegate3(2L, 3L) == 5L);
+		
+		BRICXX_CHECK(delegate2 == delegate3);
+		delegate3.Unbind();
+		BRICXX_CHECK(delegate2 != delegate3);
+	}
+	
+	// 3.2 functor
 	{
 		ConstNoexceptFunctorAddLong constNoexceptFunctorAddLong;
 		
@@ -1057,7 +1130,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.2 lambda
+	// 3.3 lambda
 	{
 		auto constNoexceptLambdaAddLong = [](long x, long y) noexcept -> long {
 			return x + y;
@@ -1082,7 +1155,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate2 != delegate3);
 	}
 	
-	// 3.3 member
+	// 3.4 member
 	{
 		ConstNoexceptClassAddLong constNoexceptClassAddLong;
 		
@@ -1111,7 +1184,14 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 4 const-noexcept-correctness
 	
-	// 4.1 functor
+	// 4.1 function
+	{
+		Delegate<long (long, long) const noexcept> delegate;
+		//delegate.Bind<&FunctionAddLong>();	// OK, does not compile
+		(void)delegate;
+	}
+	
+	// 4.2 functor
 	{
 		Delegate<long (long, long) const noexcept> delegate;
 		
@@ -1130,7 +1210,7 @@ void TestConstNoexceptDelegate() {
 		(void)delegate;
 	}
 	
-	// 4.2 lambda
+	// 4.3 lambda
 	{
 		Delegate<long (long, long) const noexcept> delegate;
 		
@@ -1158,7 +1238,7 @@ void TestConstNoexceptDelegate() {
 		(void)delegate;
 	}
 	
-	// 4.3 member
+	// 4.4 member
 	{
 		Delegate<long (long, long) const noexcept> delegate;
 		
@@ -1181,7 +1261,16 @@ void TestConstNoexceptDelegate() {
 	//************************************************************
 	// 5 compatible signatures
 	
-	// 5.1 functor
+	// 5.1 function
+	{
+		Delegate<long (long, long) const noexcept> delegate;
+		delegate.Bind<&NoexceptFunctionAddInt>();
+		BRICXX_CHECK(delegate.IsBinded());
+		BRICXX_CHECK(delegate.IsBindedTo<&NoexceptFunctionAddInt>());
+		BRICXX_CHECK(delegate(1, 2) == 3);
+	}
+	
+	// 5.2 functor
 	{
 		ConstNoexceptFunctorAddInt constNoexceptFunctorAddInt;
 		
@@ -1192,7 +1281,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.2 lambda
+	// 5.3 lambda
 	{
 		auto constNoexceptLambdaAddInt = [](int x, int y) noexcept -> int {
 			return x + y;
@@ -1205,7 +1294,7 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}
 	
-	// 5.3 member
+	// 5.4 member
 	{
 		ConstNoexceptClassAddInt constNoexceptClassAddInt;
 		
