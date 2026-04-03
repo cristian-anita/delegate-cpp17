@@ -103,7 +103,7 @@ namespace bricxx {
 /// if (!functionDelegate('a')) throw runtime_error("function test failed");
 /// 
 /// // lambda/functor
-/// int numCalls = 0;
+/// unsigned int numCalls = 0U;
 /// auto lambda = [&numCalls](int x, int y) mutable -> bool {
 /// 	++numCalls;
 /// 	return x > y;
@@ -112,7 +112,7 @@ namespace bricxx {
 /// lambdaDelegate.Bind(lambda);
 /// if (!lambdaDelegate.IsBindedTo(lambda)) throw runtime_error("lambda test failed");
 /// if (!lambdaDelegate(2, 1)) throw runtime_error("lambda test failed");
-/// if (numCalls != 1) throw runtime_error("lambda test failed");
+/// if (numCalls != 1U) throw runtime_error("lambda test failed");
 /// 
 /// // method (member function)
 /// string hello = "Hello, World!";
@@ -153,12 +153,10 @@ namespace bricxx {
 /// if (!caught) throw runtime_error("BadDelegateCall test failed");
 /// 
 /// // compatible signatures
-/// // long atol(const char* str);
-/// // int atoi(const char* str);
 /// Delegate<long (const char*)> delegate;
-/// delegate.Bind<&::std::atoi>();
+/// delegate.Bind<&::std::atoi>();	// int atoi(const char* str);
 /// if (!delegate.IsBindedTo<&::std::atoi>()) throw runtime_error("compatible signatures test failed");
-/// if (delegate("10") != 10) throw runtime_error("compatible signatures test failed");
+/// if (delegate("10") != 10L) throw runtime_error("compatible signatures test failed");
 /// \endcode
 template <typename TSignature>
 class Delegate;
