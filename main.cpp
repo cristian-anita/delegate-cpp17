@@ -272,6 +272,11 @@ void TestDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long)>::CreateAndBind<&FunctionAddLong>();
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo<&FunctionAddLong>());
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.2 functor
@@ -286,6 +291,12 @@ void TestDelegate() {
 		BRICXX_CHECK(functorAddLong.GetNumCalls() == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long)>::CreateAndBind(functorAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(functorAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(functorAddLong.GetNumCalls() == 2);
 	}
 	
 	// 2.3 lambda
@@ -304,6 +315,12 @@ void TestDelegate() {
 		BRICXX_CHECK(numCalls == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long)>::CreateAndBind(lambdaAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(lambdaAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(numCalls == 2);
 	}
 	
 	// 2.4 member
@@ -319,6 +336,13 @@ void TestDelegate() {
 		BRICXX_CHECK(classAddLong.GetNumCalls() == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long)>::CreateAndBind<&ClassAddLong::Add>(classAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		classAddLongIsBindedTo = delegate1.IsBindedTo<&ClassAddLong::Add>(classAddLong);
+		BRICXX_CHECK(classAddLongIsBindedTo);
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(classAddLong.GetNumCalls() == 2);
 	}
 	
 	
@@ -511,6 +535,11 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const>::CreateAndBind<&FunctionAddLong>();
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo<&FunctionAddLong>());
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.2 functor
@@ -524,6 +553,11 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const>::CreateAndBind(constFunctorAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(constFunctorAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.3 lambda
@@ -539,6 +573,11 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const>::CreateAndBind(constLambdaAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(constLambdaAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.4 member
@@ -553,6 +592,12 @@ void TestConstDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const>::CreateAndBind<&ConstClassAddLong::Add>(constClassAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		constClassAddLongIsBindedTo = delegate1.IsBindedTo<&ConstClassAddLong::Add>(constClassAddLong);
+		BRICXX_CHECK(constClassAddLongIsBindedTo);
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	
@@ -762,6 +807,11 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) noexcept>::CreateAndBind<&NoexceptFunctionAddLong>();
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo<&NoexceptFunctionAddLong>());
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.2 functor
@@ -776,6 +826,12 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(noexceptFunctorAddLong.GetNumCalls() == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) noexcept>::CreateAndBind(noexceptFunctorAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(noexceptFunctorAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(noexceptFunctorAddLong.GetNumCalls() == 2);
 	}
 	
 	// 2.3 lambda
@@ -794,6 +850,12 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(numCalls == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) noexcept>::CreateAndBind(noexceptLambdaAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(noexceptLambdaAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(numCalls == 2);
 	}
 	
 	// 2.4 member
@@ -809,6 +871,14 @@ void TestNoexceptDelegate() {
 		BRICXX_CHECK(noexceptClassAddLong.GetNumCalls() == 1);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) noexcept>::CreateAndBind<&NoexceptClassAddLong::Add>(
+			noexceptClassAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		noexceptClassAddLongIsBindedTo = delegate1.IsBindedTo<&NoexceptClassAddLong::Add>(noexceptClassAddLong);
+		BRICXX_CHECK(noexceptClassAddLongIsBindedTo);
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
+		BRICXX_CHECK(noexceptClassAddLong.GetNumCalls() == 2);
 	}
 	
 	
@@ -1038,6 +1108,11 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const noexcept>::CreateAndBind<&NoexceptFunctionAddLong>();
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo<&NoexceptFunctionAddLong>());
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.2 functor
@@ -1051,6 +1126,11 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const noexcept>::CreateAndBind(constNoexceptFunctorAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(constNoexceptFunctorAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.3 lambda
@@ -1066,6 +1146,11 @@ void TestConstNoexceptDelegate() {
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const noexcept>::CreateAndBind(constNoexceptLambdaAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		BRICXX_CHECK(delegate1.IsBindedTo(constNoexceptLambdaAddLong));
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	// 2.4 member
@@ -1075,11 +1160,20 @@ void TestConstNoexceptDelegate() {
 		Delegate<long (long, long) const noexcept> delegate;
 		delegate.Bind<&ConstNoexceptClassAddLong::Add>(constNoexceptClassAddLong);
 		BRICXX_CHECK(delegate.IsBinded());
-		bool constNoexceptClassAddLongIsBindedTo = delegate.IsBindedTo<&ConstNoexceptClassAddLong::Add>(constNoexceptClassAddLong);
+		bool constNoexceptClassAddLongIsBindedTo = delegate.IsBindedTo<&ConstNoexceptClassAddLong::Add>(
+			constNoexceptClassAddLong);
 		BRICXX_CHECK(constNoexceptClassAddLongIsBindedTo);
 		BRICXX_CHECK(delegate(1L, 2L) == 3L);
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
+		
+		Delegate delegate1 = Delegate<long (long, long) const noexcept>::CreateAndBind<&ConstNoexceptClassAddLong::Add>(
+			constNoexceptClassAddLong);
+		BRICXX_CHECK(delegate1.IsBinded());
+		constNoexceptClassAddLongIsBindedTo = delegate1.IsBindedTo<&ConstNoexceptClassAddLong::Add>(
+			constNoexceptClassAddLong);
+		BRICXX_CHECK(constNoexceptClassAddLongIsBindedTo);
+		BRICXX_CHECK(delegate1(1L, 2L) == 3L);
 	}
 	
 	
@@ -1164,14 +1258,16 @@ void TestConstNoexceptDelegate() {
 		
 		Delegate<long (long, long) const noexcept> delegate2 = delegate;
 		BRICXX_CHECK(delegate2.IsBinded());
-		bool constNoexceptClassAddLongIsBindedTo = delegate2.IsBindedTo<&ConstNoexceptClassAddLong::Add>(constNoexceptClassAddLong);
+		bool constNoexceptClassAddLongIsBindedTo = delegate2.IsBindedTo<&ConstNoexceptClassAddLong::Add>(
+			constNoexceptClassAddLong);
 		BRICXX_CHECK(constNoexceptClassAddLongIsBindedTo);
 		BRICXX_CHECK(delegate2(1L, 2L) == 3L);
 		
 		Delegate<long (long, long) const noexcept> delegate3;
 		delegate3 = delegate;
 		BRICXX_CHECK(delegate3.IsBinded());
-		constNoexceptClassAddLongIsBindedTo = delegate3.IsBindedTo<&ConstNoexceptClassAddLong::Add>(constNoexceptClassAddLong);
+		constNoexceptClassAddLongIsBindedTo = delegate3.IsBindedTo<&ConstNoexceptClassAddLong::Add>(
+			constNoexceptClassAddLong);
 		BRICXX_CHECK(constNoexceptClassAddLongIsBindedTo);
 		BRICXX_CHECK(delegate3(2L, 3L) == 5L);
 		
@@ -1301,7 +1397,8 @@ void TestConstNoexceptDelegate() {
 		Delegate<long (long, long) const> delegate;
 		delegate.Bind<&ConstNoexceptClassAddInt::Add>(constNoexceptClassAddInt);
 		BRICXX_CHECK(delegate.IsBinded());
-		bool constNoexceptClassAddIntIsBindedTo = delegate.IsBindedTo<&ConstNoexceptClassAddInt::Add>(constNoexceptClassAddInt);
+		bool constNoexceptClassAddIntIsBindedTo = delegate.IsBindedTo<&ConstNoexceptClassAddInt::Add>(
+			constNoexceptClassAddInt);
 		BRICXX_CHECK(constNoexceptClassAddIntIsBindedTo);
 		BRICXX_CHECK(delegate(1, 2) == 3);
 	}

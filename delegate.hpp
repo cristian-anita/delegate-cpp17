@@ -329,6 +329,40 @@ public:
 		>
 	>
 	[[nodiscard]] TRetVal operator()(UParams&&... params);
+	
+	
+	/// \name Create and bind (convenience methods).
+	/// Creates a delegate and binds it to the given target.
+	/// @{
+	
+	/// Creates a delegate and binds it to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind() noexcept;
+	
+	/// Creates a delegate and binds it to the given \p functor / lambda (\c TFunctor is auto-deduced).
+	template <class TFunctor,
+		typename = ::std::enable_if_t<
+			::std::is_class_v<TFunctor>
+			&& ::std::is_invocable_r_v<TRetVal, TFunctor&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(TFunctor& functor) noexcept;
+	
+	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
+	template <auto TMethod, class TClass,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TMethod), TClass&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(TClass& object) noexcept;
+	
+	/// @}
 private:
 	using typename DelegateBase<TRetVal, TParams...>::ErasedObjectType;
 	using typename DelegateBase<TRetVal, TParams...>::StubFnPtr;
@@ -445,6 +479,40 @@ public:
 		>
 	>
 	[[nodiscard]] TRetVal operator()(UParams&&... params) const;
+	
+	
+	/// \name Create and bind (convenience methods).
+	/// Creates a delegate and binds it to the given target.
+	/// @{
+	
+	/// Creates a delegate and binds it to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind() noexcept;
+	
+	/// Creates a delegate and binds it to the given \p functor / lambda (\c TFunctor is auto-deduced).
+	template <class TFunctor,
+		typename = ::std::enable_if_t<
+			::std::is_class_v<TFunctor>
+			&& ::std::is_invocable_r_v<TRetVal, const TFunctor&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(const TFunctor& functor) noexcept;
+	
+	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
+	template <auto TMethod, class TClass,
+		typename = ::std::enable_if_t<
+			::std::is_invocable_r_v<TRetVal, decltype(TMethod), const TClass&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(const TClass& object) noexcept;
+	
+	/// @}
 private:
 	using typename DelegateBase<TRetVal, TParams...>::ErasedObjectType;
 	using typename DelegateBase<TRetVal, TParams...>::StubFnPtr;
@@ -561,6 +629,40 @@ public:
 		>
 	>
 	[[nodiscard]] TRetVal operator()(UParams&&... params) noexcept;
+	
+	
+	/// \name Create and bind (convenience methods).
+	/// Creates a delegate and binds it to the given target.
+	/// @{
+	
+	/// Creates a delegate and binds it to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind() noexcept;
+	
+	/// Creates a delegate and binds it to the given \p functor / lambda (\c TFunctor is auto-deduced).
+	template <class TFunctor,
+		typename = ::std::enable_if_t<
+			::std::is_class_v<TFunctor>
+			&& ::std::is_nothrow_invocable_r_v<TRetVal, TFunctor&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(TFunctor& functor) noexcept;
+	
+	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
+	template <auto TMethod, class TClass,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TMethod), TClass&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(TClass& object) noexcept;
+	
+	/// @}
 private:
 	using typename DelegateBase<TRetVal, TParams...>::ErasedObjectType;
 	using typename DelegateBase<TRetVal, TParams...>::StubFnPtr;
@@ -677,6 +779,40 @@ public:
 		>
 	>
 	[[nodiscard]] TRetVal operator()(UParams&&... params) const noexcept;
+	
+	
+	/// \name Create and bind (convenience methods).
+	/// Creates a delegate and binds it to the given target.
+	/// @{
+	
+	/// Creates a delegate and binds it to the given (non-member) function.
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures.
+	template <auto TFunction,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TFunction), TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind() noexcept;
+	
+	/// Creates a delegate and binds it to the given \p functor / lambda (\c TFunctor is auto-deduced).
+	template <class TFunctor,
+		typename = ::std::enable_if_t<
+			::std::is_class_v<TFunctor>
+			&& ::std::is_nothrow_invocable_r_v<TRetVal, const TFunctor&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(const TFunctor& functor) noexcept;
+	
+	/// Creates a delegate and binds it to the given \p object + method (member function).
+	/// \remark Uses C++17 auto for template parameters to support compatible signatures and auto-deduce \c TClass
+	template <auto TMethod, class TClass,
+		typename = ::std::enable_if_t<
+			::std::is_nothrow_invocable_r_v<TRetVal, decltype(TMethod), const TClass&, TParams...>
+		>
+	>
+	[[nodiscard]] static constexpr Delegate CreateAndBind(const TClass& object) noexcept;
+	
+	/// @}
 private:
 	using typename DelegateBase<TRetVal, TParams...>::ErasedObjectType;
 	using typename DelegateBase<TRetVal, TParams...>::StubFnPtr;
@@ -855,6 +991,31 @@ inline TRetVal Delegate<TRetVal (TParams...)>::operator()(UParams&&... params) {
 }
 
 
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr Delegate<TRetVal (TParams...)> Delegate<TRetVal (TParams...)>::CreateAndBind() noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <class TFunctor, typename>
+inline constexpr Delegate<TRetVal (TParams...)> Delegate<TRetVal (TParams...)>::CreateAndBind(TFunctor& functor) noexcept {
+	Delegate delegate;
+	delegate.Bind(functor);
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <auto TMethod, class TClass, typename>
+inline constexpr Delegate<TRetVal (TParams...)> Delegate<TRetVal (TParams...)>::CreateAndBind(TClass& object) noexcept {
+	Delegate delegate;
+	delegate.Bind<TMethod>(object);
+	return delegate;
+}
+
+
 
 
 template <typename TRetVal, typename... TParams>
@@ -961,6 +1122,32 @@ inline TRetVal Delegate<TRetVal (TParams...) const>::operator()(UParams&&... par
 }
 
 
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr Delegate<TRetVal (TParams...) const> Delegate<TRetVal (TParams...) const>::CreateAndBind() noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <class TFunctor, typename>
+inline constexpr Delegate<TRetVal (TParams...) const> Delegate<TRetVal (TParams...) const>::CreateAndBind(
+		const TFunctor& functor) noexcept {
+	Delegate delegate;
+	delegate.Bind(functor);
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <auto TMethod, class TClass, typename>
+inline constexpr Delegate<TRetVal (TParams...) const> Delegate<TRetVal (TParams...) const>::CreateAndBind(
+		const TClass& object) noexcept {
+	Delegate delegate;
+	delegate.Bind<TMethod>(object);
+	return delegate;
+}
+
 
 
 template <typename TRetVal, typename... TParams>
@@ -1058,6 +1245,33 @@ template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
 inline TRetVal Delegate<TRetVal (TParams...) noexcept>::operator()(UParams&&... params) noexcept {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
+}
+
+
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr Delegate<TRetVal (TParams...) noexcept> Delegate<TRetVal (TParams...) noexcept>::CreateAndBind() noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <class TFunctor, typename>
+inline constexpr Delegate<TRetVal (TParams...) noexcept> Delegate<TRetVal (TParams...) noexcept>::CreateAndBind(
+		TFunctor& functor) noexcept {
+	Delegate delegate;
+	delegate.Bind(functor);
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <auto TMethod, class TClass, typename>
+inline constexpr Delegate<TRetVal (TParams...) noexcept> Delegate<TRetVal (TParams...) noexcept>::CreateAndBind(
+		TClass& object) noexcept {
+	Delegate delegate;
+	delegate.Bind<TMethod>(object);
+	return delegate;
 }
 
 
@@ -1164,6 +1378,34 @@ template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
 inline TRetVal Delegate<TRetVal (TParams...) const noexcept>::operator()(UParams&&... params) const noexcept {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
+}
+
+
+template <typename TRetVal, typename... TParams>
+template <auto TFunction, typename>
+inline constexpr Delegate<TRetVal (TParams...) const noexcept> Delegate<TRetVal (TParams...) const noexcept>::CreateAndBind()
+		noexcept {
+	Delegate delegate;
+	delegate.Bind<TFunction>();
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <class TFunctor, typename>
+inline constexpr Delegate<TRetVal (TParams...) const noexcept> Delegate<TRetVal (TParams...) const noexcept>::CreateAndBind(
+		const TFunctor& functor) noexcept {
+	Delegate delegate;
+	delegate.Bind(functor);
+	return delegate;
+}
+
+template <typename TRetVal, typename... TParams>
+template <auto TMethod, class TClass, typename>
+inline constexpr Delegate<TRetVal (TParams...) const noexcept> Delegate<TRetVal (TParams...) const noexcept>::CreateAndBind(
+		const TClass& object) noexcept {
+	Delegate delegate;
+	delegate.Bind<TMethod>(object);
+	return delegate;
 }
 
 
