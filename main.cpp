@@ -870,8 +870,7 @@ void TestNoexceptDelegate() {
 		delegate.Unbind();
 		BRICXX_CHECK(!delegate.IsBinded());
 		
-		Delegate delegate1 = Delegate<int (int, int) noexcept>::CreateAndBind<&NoexceptClassAddInt::Add>(
-			noexceptClassAddInt);
+		Delegate delegate1 = Delegate<int (int, int) noexcept>::CreateAndBind<&NoexceptClassAddInt::Add>(noexceptClassAddInt);
 		BRICXX_CHECK(delegate1.IsBinded());
 		noexceptClassAddIntIsBindedTo = delegate1.IsBindedTo<&NoexceptClassAddInt::Add>(noexceptClassAddInt);
 		BRICXX_CHECK(noexceptClassAddIntIsBindedTo);
@@ -1168,8 +1167,7 @@ void TestConstNoexceptDelegate() {
 		Delegate delegate1 = Delegate<int (int, int) const noexcept>::CreateAndBind<&ConstNoexceptClassAddInt::Add>(
 			constNoexceptClassAddInt);
 		BRICXX_CHECK(delegate1.IsBinded());
-		constNoexceptClassAddIntIsBindedTo = delegate1.IsBindedTo<&ConstNoexceptClassAddInt::Add>(
-			constNoexceptClassAddInt);
+		constNoexceptClassAddIntIsBindedTo = delegate1.IsBindedTo<&ConstNoexceptClassAddInt::Add>(constNoexceptClassAddInt);
 		BRICXX_CHECK(constNoexceptClassAddIntIsBindedTo);
 		BRICXX_CHECK(delegate1(1, 2) == 3);
 	}
@@ -1264,8 +1262,7 @@ void TestConstNoexceptDelegate() {
 		Delegate<int (int, int) const noexcept> delegate3;
 		delegate3 = delegate;
 		BRICXX_CHECK(delegate3.IsBinded());
-		constNoexceptClassAddIntIsBindedTo = delegate3.IsBindedTo<&ConstNoexceptClassAddInt::Add>(
-			constNoexceptClassAddInt);
+		constNoexceptClassAddIntIsBindedTo = delegate3.IsBindedTo<&ConstNoexceptClassAddInt::Add>(constNoexceptClassAddInt);
 		BRICXX_CHECK(constNoexceptClassAddIntIsBindedTo);
 		BRICXX_CHECK(delegate3(2, 3) == 5);
 		
@@ -1368,7 +1365,7 @@ void TestConstNoexceptDelegate() {
 	{
 		ConstNoexceptFunctorAddLong constNoexceptFunctorAddLong;
 		
-		Delegate<int (int, int) const> delegate;
+		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind(constNoexceptFunctorAddLong);
 		BRICXX_CHECK(delegate.IsBinded());
 		BRICXX_CHECK(delegate.IsBindedTo(constNoexceptFunctorAddLong));
@@ -1381,7 +1378,7 @@ void TestConstNoexceptDelegate() {
 			return x + y;
 		};
 		
-		Delegate<int (int, int) const> delegate;
+		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind(constNoexceptLambdaAddLong);
 		BRICXX_CHECK(delegate.IsBinded());
 		BRICXX_CHECK(delegate.IsBindedTo(constNoexceptLambdaAddLong));
@@ -1392,7 +1389,7 @@ void TestConstNoexceptDelegate() {
 	{
 		ConstNoexceptClassAddLong constNoexceptClassAddLong;
 		
-		Delegate<int (int, int) const> delegate;
+		Delegate<int (int, int) const noexcept> delegate;
 		delegate.Bind<&ConstNoexceptClassAddLong::Add>(constNoexceptClassAddLong);
 		BRICXX_CHECK(delegate.IsBinded());
 		bool constNoexceptClassAddLongIsBindedTo = delegate.IsBindedTo<&ConstNoexceptClassAddLong::Add>(
