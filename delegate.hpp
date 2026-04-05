@@ -199,7 +199,7 @@ protected:
 	constexpr DelegateBase(const DelegateBase& other) noexcept;
 	/// @}
 	
-	~DelegateBase() noexcept;	///< \remark Not virtual.
+	~DelegateBase() noexcept = default;	///< \remark Not virtual.
 	
 	constexpr DelegateBase& operator=(const DelegateBase& other) noexcept;
 	
@@ -241,7 +241,7 @@ public:
 	constexpr Delegate(const Delegate& other) noexcept;
 	/// @}
 	
-	~Delegate() noexcept;	///< \remark Not virtual.
+	~Delegate() noexcept = default;	///< \remark Not virtual.
 	
 	constexpr Delegate& operator=(const Delegate& other) noexcept;
 	
@@ -330,7 +330,7 @@ public:
 			::std::is_invocable_v<TRetVal (TParams...), UParams...>
 		>
 	>
-	[[nodiscard]] TRetVal operator()(UParams&&... params);
+	[[nodiscard]] constexpr TRetVal operator()(UParams&&... params);
 	
 	
 	/// \name Create and bind (convenience methods).
@@ -391,7 +391,7 @@ public:
 	constexpr Delegate(const Delegate& other) noexcept;
 	/// @}
 	
-	~Delegate() noexcept;	///< \remark Not virtual.
+	~Delegate() noexcept = default;	///< \remark Not virtual.
 	
 	constexpr Delegate& operator=(const Delegate& other) noexcept;
 	
@@ -480,7 +480,7 @@ public:
 			::std::is_invocable_v<TRetVal (TParams...), UParams...>
 		>
 	>
-	[[nodiscard]] TRetVal operator()(UParams&&... params) const;
+	[[nodiscard]] constexpr TRetVal operator()(UParams&&... params) const;
 	
 	
 	/// \name Create and bind (convenience methods).
@@ -541,7 +541,7 @@ public:
 	constexpr Delegate(const Delegate& other) noexcept;
 	/// @}
 	
-	~Delegate() noexcept;	///< \remark Not virtual.
+	~Delegate() noexcept = default;	///< \remark Not virtual.
 	
 	constexpr Delegate& operator=(const Delegate& other) noexcept;
 	
@@ -630,7 +630,7 @@ public:
 			::std::is_nothrow_invocable_v<TRetVal (TParams...) noexcept, UParams...>
 		>
 	>
-	[[nodiscard]] TRetVal operator()(UParams&&... params) noexcept;
+	[[nodiscard]] constexpr TRetVal operator()(UParams&&... params) noexcept;
 	
 	
 	/// \name Create and bind (convenience methods).
@@ -691,7 +691,7 @@ public:
 	constexpr Delegate(const Delegate& other) noexcept;
 	/// @}
 	
-	~Delegate() noexcept;	///< \remark Not virtual.
+	~Delegate() noexcept = default;	///< \remark Not virtual.
 	
 	constexpr Delegate& operator=(const Delegate& other) noexcept;
 	
@@ -780,7 +780,7 @@ public:
 			::std::is_nothrow_invocable_v<TRetVal (TParams...) noexcept, UParams...>
 		>
 	>
-	[[nodiscard]] TRetVal operator()(UParams&&... params) const noexcept;
+	[[nodiscard]] constexpr TRetVal operator()(UParams&&... params) const noexcept;
 	
 	
 	/// \name Create and bind (convenience methods).
@@ -867,10 +867,6 @@ inline constexpr DelegateBase<TRetVal, TParams...>::DelegateBase(const DelegateB
 
 
 template <typename TRetVal, typename... TParams>
-inline DelegateBase<TRetVal, TParams...>::~DelegateBase() noexcept = default;
-
-
-template <typename TRetVal, typename... TParams>
 inline constexpr DelegateBase<TRetVal, TParams...>& DelegateBase<TRetVal, TParams...>::operator=(
 		const DelegateBase& other) noexcept = default;
 
@@ -903,10 +899,6 @@ inline constexpr Delegate<TRetVal (TParams...)>::Delegate(const Delegate& other)
 
 
 template <typename TRetVal, typename... TParams>
-inline Delegate<TRetVal (TParams...)>::~Delegate() noexcept = default;
-
-
-template <typename TRetVal, typename... TParams>
 inline constexpr Delegate<TRetVal (TParams...)>& Delegate<TRetVal (TParams...)>::operator=(const Delegate& other)
 		noexcept = default;
 
@@ -927,7 +919,7 @@ template <auto TFunction, typename>
 inline constexpr void Delegate<TRetVal (TParams...)>::Bind() noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctionStub()
-		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			return (*TFunction)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -939,7 +931,7 @@ template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...)>::Bind(TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctorStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			return (*static_cast<TFunctor*>(pTypeErasedObject))(::std::forward<TParams>(params)...);
 		}
 	);
@@ -953,7 +945,7 @@ inline constexpr void Delegate<TRetVal (TParams...)>::Bind(TClass& object) noexc
 	
 	this->pStub_ = static_cast<StubFnPtr>(
 		// MethodStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			return (static_cast<TClass*>(pTypeErasedObject)->*TMethod)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -988,7 +980,7 @@ inline constexpr bool Delegate<TRetVal (TParams...)>::IsBindedTo(TClass& object)
 
 template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
-inline TRetVal Delegate<TRetVal (TParams...)>::operator()(UParams&&... params) {
+inline constexpr TRetVal Delegate<TRetVal (TParams...)>::operator()(UParams&&... params) {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
 }
 
@@ -1028,10 +1020,6 @@ inline constexpr Delegate<TRetVal (TParams...) const>::Delegate(const Delegate& 
 
 
 template <typename TRetVal, typename... TParams>
-inline Delegate<TRetVal (TParams...) const>::~Delegate() noexcept = default;
-
-
-template <typename TRetVal, typename... TParams>
 inline constexpr Delegate<TRetVal (TParams...) const>& Delegate<TRetVal (TParams...) const>::operator=(const Delegate& other)
 		noexcept = default;
 
@@ -1052,7 +1040,7 @@ template <auto TFunction, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const>::Bind() noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctionStub()
-		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			return (*TFunction)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -1064,7 +1052,7 @@ template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const>::Bind(const TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctorStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			// restoring removed const
 			return (*static_cast<const TFunctor*>(pTypeErasedObject))(::std::forward<TParams>(params)...);
 		}
@@ -1081,7 +1069,7 @@ inline constexpr void Delegate<TRetVal (TParams...) const>::Bind(const TClass& o
 	
 	this->pStub_ = static_cast<StubFnPtr>(
 		// MethodStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr -> TRetVal {
 			// restoring removed const
 			return (static_cast<const TClass*>(pTypeErasedObject)->*TMethod)(::std::forward<TParams>(params)...);
 		}
@@ -1119,7 +1107,7 @@ inline constexpr bool Delegate<TRetVal (TParams...) const>::IsBindedTo(const TCl
 
 template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
-inline TRetVal Delegate<TRetVal (TParams...) const>::operator()(UParams&&... params) const {
+inline constexpr TRetVal Delegate<TRetVal (TParams...) const>::operator()(UParams&&... params) const {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
 }
 
@@ -1160,10 +1148,6 @@ inline constexpr Delegate<TRetVal (TParams...) noexcept>::Delegate(const Delegat
 
 
 template <typename TRetVal, typename... TParams>
-inline Delegate<TRetVal (TParams...) noexcept>::~Delegate() noexcept = default;
-
-
-template <typename TRetVal, typename... TParams>
 inline constexpr Delegate<TRetVal (TParams...) noexcept>& Delegate<TRetVal (TParams...) noexcept>::operator=(
 		const Delegate& other) noexcept = default;
 
@@ -1184,7 +1168,7 @@ template <auto TFunction, typename>
 inline constexpr void Delegate<TRetVal (TParams...) noexcept>::Bind() noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctionStub()
-		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			return (*TFunction)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -1196,7 +1180,7 @@ template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...) noexcept>::Bind(TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctorStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			return (*static_cast<TFunctor*>(pTypeErasedObject))(::std::forward<TParams>(params)...);
 		}
 	);
@@ -1210,7 +1194,7 @@ inline constexpr void Delegate<TRetVal (TParams...) noexcept>::Bind(TClass& obje
 	
 	this->pStub_ = static_cast<StubFnPtr>(
 		// MethodStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			return (static_cast<TClass*>(pTypeErasedObject)->*TMethod)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -1245,7 +1229,7 @@ inline constexpr bool Delegate<TRetVal (TParams...) noexcept>::IsBindedTo(TClass
 
 template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
-inline TRetVal Delegate<TRetVal (TParams...) noexcept>::operator()(UParams&&... params) noexcept {
+inline constexpr TRetVal Delegate<TRetVal (TParams...) noexcept>::operator()(UParams&&... params) noexcept {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
 }
 
@@ -1287,10 +1271,6 @@ inline constexpr Delegate<TRetVal (TParams...) const noexcept>::Delegate(const D
 
 
 template <typename TRetVal, typename... TParams>
-inline Delegate<TRetVal (TParams...) const noexcept>::~Delegate() noexcept = default;
-
-
-template <typename TRetVal, typename... TParams>
 inline constexpr Delegate<TRetVal (TParams...) const noexcept>& Delegate<TRetVal (TParams...) const noexcept>::operator=(
 		const Delegate& other) noexcept = default;
 
@@ -1311,7 +1291,7 @@ template <auto TFunction, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind() noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctionStub()
-		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[]([[maybe_unused]] ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			return (*TFunction)(::std::forward<TParams>(params)...);
 		}
 	);
@@ -1323,7 +1303,7 @@ template <class TFunctor, typename>
 inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind(const TFunctor& functor) noexcept {
 	this->pStub_ = static_cast<StubFnPtr>(
 		// FunctorStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			// restoring removed const
 			return (*static_cast<const TFunctor*>(pTypeErasedObject))(::std::forward<TParams>(params)...);
 		}
@@ -1340,7 +1320,7 @@ inline constexpr void Delegate<TRetVal (TParams...) const noexcept>::Bind(const 
 	
 	this->pStub_ = static_cast<StubFnPtr>(
 		// MethodStub()
-		[](ErasedObjectType* pTypeErasedObject, TParams... params) noexcept -> TRetVal {
+		[](ErasedObjectType* pTypeErasedObject, TParams... params) constexpr noexcept -> TRetVal {
 			// restoring removed const
 			return (static_cast<const TClass*>(pTypeErasedObject)->*TMethod)(::std::forward<TParams>(params)...);
 		}
@@ -1378,7 +1358,7 @@ inline constexpr bool Delegate<TRetVal (TParams...) const noexcept>::IsBindedTo(
 
 template <typename TRetVal, typename... TParams>
 template <typename... UParams, typename>
-inline TRetVal Delegate<TRetVal (TParams...) const noexcept>::operator()(UParams&&... params) const noexcept {
+inline constexpr TRetVal Delegate<TRetVal (TParams...) const noexcept>::operator()(UParams&&... params) const noexcept {
 	return (*this->pStub_)(this->pTypeErasedObject_, ::std::forward<UParams>(params)...);
 }
 
